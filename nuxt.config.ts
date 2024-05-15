@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   modules: ["@nuxt/ui", "@nuxt/content"],
   app: {
     head: {
+      title: "Carlos Ferreras",
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
       meta: [
@@ -25,6 +26,18 @@ export default defineNuxtConfig({
         {
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/images/favicon-dark.png",
+          media: "(prefers-color-scheme: light)",
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/images/favicon-light.png",
+          media: "(prefers-color-scheme: dark)",
         },
       ],
     },
