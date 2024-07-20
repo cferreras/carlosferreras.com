@@ -10,7 +10,7 @@ setInterval(fetchRepos, 60 * 60 * 1000);
 
 export default defineEventHandler(async (event) => {
   if (!repos) {
-    fetchRepos();
+    await fetchRepos();
   }
 
   return {
