@@ -1,19 +1,53 @@
 let repos: any = null;
+let lastFetch: number = 0;
+const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
 
 async function fetchRepos() {
-  console.log("feched!");
+  console.log("fetched!");
   repos = await $fetch("https://api.github.com/users/cferreras/repos");
+  lastFetch = Date.now();
 }
 
-// Fetch only every 1h
-setInterval(fetchRepos, 60 * 60 * 1000);
-
 export default defineEventHandler(async (event) => {
-  if (!repos) {
+  // Get the repo URL from query parameters
+  const query = getQuery(event);
+  const repoUrl = query.url as string;
+
+  // Fetch repos if they haven't been fetched yet or cache has expired
+  if (!repos || Date.now() - lastFetch > CACHE_DURATION) {
     await fetchRepos();
   }
 
-  return {
-    repos,
-  };
+  // If no repo URL provided, return all repos
+  if (!repoUrl) {
+    return { repos };
+  }
+
+  // Extract owner and repo name from URL
+  // Example: https://github.com/cferreras/repo-name
+  try {
+    const urlParts = repoUrl.split('/');
+    const repoName = urlParts[urlParts.length - 1];
+    
+    // Find the repo in our cached data
+    const repoData = repos.find((repo: any) => repo.name === repoName);
+    
+    if (repoData) {
+      return {
+        stars: repoData.stargazers_count,
+        name: repoData.name,
+        description: repoData.description
+      };
+    } else {
+      return {
+        error: "Repository not found",
+        stars: 0
+      };
+    }
+  } catch (error) {
+    return {
+      error: "Invalid repository URL",
+      stars: 0
+    };
+  }
 });

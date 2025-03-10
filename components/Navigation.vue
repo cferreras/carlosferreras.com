@@ -1,120 +1,182 @@
 <template>
-  <UCard class="mt-10 prose-lg">
-    <nav>
-      <!-- desktop -->
-      <div class="sm:flex sm:space-x-8 space-y-2 sm:space-y-0">
-        <div class="flex justify-between items-center self-center">
-          <ULink class="block w-36 font-medium" to="/"> Carlos Ferreras </ULink>
-          <div class="flex">
-            <ColorScheme>
-              <div class="sm:border-t-0 self-center sm:hidden mr-3 flex">
-                <UButton
-                  class=""
-                  v-if="$colorMode.value === 'dark'"
-                  @click="$colorMode.preference = 'light'"
-                  icon="i-heroicons-moon-20-solid"
-                  size="sm"
-                  color="black"
-                  variant="ghost"
-                ></UButton>
-                <UButton
-                  class=""
-                  v-if="$colorMode.value === 'light'"
-                  @click="$colorMode.preference = 'dark'"
-                  icon="i-heroicons-sun-20-solid"
-                  size="sm"
-                  color="white"
-                  variant="ghost"
-                ></UButton>
-              </div>
-            </ColorScheme>
-            <UButton
-              v-if="menuOpen"
+  <div class="navigation-container">
+    <nav class="main-nav">
+      <!-- desktop and mobile header -->
+      <div class="nav-content">
+        <div class="logo-container">
+          <NuxtLink class="logo-link" to="/">
+            <span class="logo-text">Carlos <span class="logo-highlight">Ferreras</span></span>
+          </NuxtLink>
+          <div class="mobile-controls">
+            <Button
               @click="menuOpen = !menuOpen"
               class="sm:hidden"
-              icon="i-heroicons-bars-3"
-              size="sm"
-              color="gray"
               variant="ghost"
-            />
-            <UButton
-              v-else
-              @click="menuOpen = !menuOpen"
-              class="sm:hidden"
-              icon="i-heroicons-x-mark"
               size="sm"
-              color="gray"
-              variant="ghost"
-            />
+            >
+              <MenuIcon v-if="!menuOpen" class="w-5 h-5" />
+              <XIcon v-else class="w-5 h-5" />
+            </Button>
           </div>
         </div>
-        <div
-          class="sm:space-x-4 sm:flex justify-between w-full items-center"
-          :class="{ hidden: menuOpen }"
-        >
-          <div
-            class="sm:space-x-4 space-y-2 sm:space-y-0 sm:flex justify-between"
-          >
-            <ULink
-              class="block"
-              to="/"
-              active-class="text-primary"
-              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 block"
-            >
-              Inicio
-            </ULink>
-            <ULink
-              class="block"
-              to="/about"
-              active-class="text-primary"
-              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            >
-              Sobre mi
-            </ULink>
-            <ULink
-              class="block"
-              to="/projects"
-              active-class="text-primary"
-              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 "
-            >
-              Proyectos
-            </ULink>
-            <ULink
-              class="block"
-              to="/blog"
-              active-class="text-primary"
-              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 "
-            >
-              Blog
-            </ULink>
-          </div>
 
-          <ColorScheme>
-            <UButton
-              class="m-0 hidden sm:flex"
-              v-if="$colorMode.value === 'dark'"
-              @click="$colorMode.preference = 'light'"
-              icon="i-heroicons-moon-20-solid"
-              size="sm"
-              color="black"
-              variant="ghost" />
-            <UButton
-              class="m-0 hidden sm:flex"
-              v-if="$colorMode.value === 'light'"
-              @click="$colorMode.preference = 'dark'"
-              icon="i-heroicons-sun-20-solid"
-              size="sm"
-              color="white"
-              variant="ghost"
-          /></ColorScheme>
+        <!-- Navigation links -->
+        <div class="nav-links" :class="{ 'nav-links-open': menuOpen }">
+          <NuxtLink
+            to="/"
+            class="nav-link"
+            active-class="nav-link-active"
+          >
+            Inicio
+          </NuxtLink>
+          <NuxtLink
+            to="/about"
+            class="nav-link"
+            active-class="nav-link-active"
+          >
+            Sobre mí
+          </NuxtLink>
+          <NuxtLink
+            to="/projects"
+            class="nav-link"
+            active-class="nav-link-active"
+          >
+            Proyectos
+          </NuxtLink>
+          <NuxtLink
+            to="/blog"
+            class="nav-link"
+            active-class="nav-link-active"
+          >
+            Blog
+          </NuxtLink>
+
+          <!-- Theme toggle button -->
+          <Button variant="ghost" size="icon" @click="toggleTheme" class="theme-toggle">
+            <SunIcon v-if="isDark" class="w-5 h-5" />
+            <MoonIcon v-else class="w-5 h-5" />
+          </Button>
         </div>
       </div>
     </nav>
-  </UCard>
+  </div>
 </template>
 
 <script setup>
-const menuOpen = ref(true);
+import { ref, onMounted } from 'vue';
+import { Button } from './ui/button';
+import { MenuIcon, XIcon, SunIcon, MoonIcon } from 'lucide-vue-next';
+
+const menuOpen = ref(false);
+const isDark = ref(false);
+
+onMounted(() => {
+  // Check screen size and only open menu by default on desktop
+  menuOpen.value = window.innerWidth >= 640;
+  
+  // Check if dark mode is enabled
+  isDark.value = document.documentElement.classList.contains('dark');
+  
+  // Add resize listener to handle menu state
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 640) {
+      menuOpen.value = true;
+    } else {
+      menuOpen.value = false; // Close menu when screen is smaller than 640px
+    }
+  });
+});
+
+function toggleTheme() {
+  isDark.value = !isDark.value;
+  
+  if (isDark.value) {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  }
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.navigation-container {
+  @apply py-4;
+}
+
+.main-nav {
+  @apply bg-white dark:bg-gray-900 bg-gray-50 rounded-xl border border-gray-200 dark:border-gray-800;
+}
+
+.nav-content {
+  @apply px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between;
+}
+
+.logo-container {
+  @apply flex justify-between items-center;
+}
+
+.logo-link {
+  @apply text-xl font-semibold text-gray-900 dark:text-white transition-colors flex items-center;
+}
+
+.logo-text {
+  @apply relative py-1 tracking-wide;
+}
+
+.logo-highlight {
+  @apply text-indigo-600 dark:text-indigo-400 font-bold;
+}
+
+/* Add a subtle underline animation on hover */
+.logo-text::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 dark:bg-indigo-400 transition-all duration-300;
+}
+
+.logo-link:hover .logo-text::after {
+  @apply w-full;
+}
+
+.mobile-controls {
+  @apply sm:hidden;
+}
+
+.nav-links {
+  @apply hidden sm:flex sm:items-center sm:space-x-6 mt-4 sm:mt-0 flex-col sm:flex-row space-y-4 sm:space-y-0;
+}
+
+.nav-links-open {
+  @apply flex;
+}
+
+.nav-link {
+  @apply font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors;
+}
+
+.nav-link-active {
+  @apply text-indigo-600 dark:text-indigo-400 font-semibold;
+}
+
+.theme-toggle {
+  @apply ml-0 sm:ml-2 mt-4 sm:mt-0 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400;
+}
+
+/* Estilos específicos para móvil */
+@media (max-width: 639px) {
+  .nav-links-open .theme-toggle {
+    @apply w-full flex justify-start hover:bg-transparent p-0 h-6;
+  }
+  
+  .nav-links-open .theme-toggle svg {
+    @apply mr-2;
+  }
+  
+  /* Añadir texto al botón en móvil */
+  .nav-links-open .theme-toggle::before {
+    content: 'Cambiar tema';
+    @apply text-base;
+  }
+}
+</style>

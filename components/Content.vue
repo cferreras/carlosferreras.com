@@ -1,20 +1,19 @@
 <template>
-  <UCard class="my-10">
-    <template #header>
-      <h1 class="text-2xl">{{ title }}</h1>
-    </template>
-    <main class="prose dark:prose-invert max-w-full prose-h1:text-2xl">
-      <slot />
-    </main>
-    <template #footer>
-      <footer class="prose dark:prose-invert">
-        &copy; 2024 Carlos Ferreras
-      </footer>
-    </template>
-  </UCard>
+  <Card class="w-full border-0 shadow-none">
+    <CardHeader>
+      <CardTitle class="text-2xl font-bold">{{ title }}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <main class="max-w-full prose dark:prose-invert prose-h1:text-2xl">
+        <slot />
+      </main>
+    </CardContent>
+  </Card>
 </template>
 
 <script setup>
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from './ui/card'
+
 defineProps({
   title: String,
 });
