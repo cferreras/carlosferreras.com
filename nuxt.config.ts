@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   },
 
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "@nuxt/content", "shadcn-nuxt"], // Removed @nuxt/ui
+  modules: ["@nuxtjs/tailwindcss", "@nuxt/content", "shadcn-nuxt", "@nuxt/eslint"], // Removed @nuxt/ui
 shadcn: {
   /**
    * Prefix for all the imported component

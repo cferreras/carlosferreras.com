@@ -1,4 +1,13 @@
-let repos: any = null;
+// Define an interface for GitHub repository data
+interface GitHubRepo {
+  name: string;
+  description: string | null;
+  stargazers_count: number;
+  // Replace the any type with more specific types for common GitHub API properties
+  [key: string]: string | number | boolean | null | undefined | object | Array<unknown>;
+}
+
+let repos: GitHubRepo[] | null = null;
 let lastFetch: number = 0;
 const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
 
@@ -30,7 +39,7 @@ export default defineEventHandler(async (event) => {
     const repoName = urlParts[urlParts.length - 1];
     
     // Find the repo in our cached data
-    const repoData = repos.find((repo: any) => repo.name === repoName);
+    const repoData = repos?.find((repo) => repo.name === repoName);
     
     if (repoData) {
       return {
@@ -44,7 +53,8 @@ export default defineEventHandler(async (event) => {
         stars: 0
       };
     }
-  } catch (error) {
+  } catch {
+    // Removed the unused variable
     return {
       error: "Invalid repository URL",
       stars: 0

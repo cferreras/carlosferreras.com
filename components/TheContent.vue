@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from './ui/card'
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
 
 defineProps({
   title: String,

@@ -1,5 +1,5 @@
 <template>
-  <content title="Blog">
+  <TheContent title="Blog">
     <BlogPosts />
-  </content>
+  </TheContent>
 </template>

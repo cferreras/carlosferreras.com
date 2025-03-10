@@ -1,6 +1,6 @@
 <template>
-    <content title="Proyectos">
+    <TheContent title="Proyectos">
       <ProjectList />
-    </content>
+    </TheContent>
   </template>
   
