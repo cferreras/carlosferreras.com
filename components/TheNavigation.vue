@@ -53,8 +53,9 @@
 
           <!-- Theme toggle button -->
           <Button variant="ghost" size="icon" @click="toggleTheme" class="theme-toggle">
-            <SunIcon v-if="isDark" class="w-5 h-5" />
-            <MoonIcon v-else class="w-5 h-5" />
+            <ComputerIcon v-if="themeMode === 'system'" class="w-5 h-5" />
+            <SunIcon v-else-if="themeMode === 'light'" class="w-5 h-5" />
+            <MoonIcon v-else-if="themeMode === 'dark'" class="w-5 h-5" />
           </Button>
         </div>
       </div>
@@ -65,17 +66,23 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { Button } from './ui/button';
-import { MenuIcon, XIcon, SunIcon, MoonIcon } from 'lucide-vue-next';
+import { MenuIcon, XIcon, SunIcon, MoonIcon, ComputerIcon } from 'lucide-vue-next';
 
 const menuOpen = ref(false);
-const isDark = ref(false);
+const themeMode = ref('system'); // Start with system theme
 
 onMounted(() => {
   // Check screen size and only open menu by default on desktop
   menuOpen.value = window.innerWidth >= 640;
   
-  // Check if dark mode is enabled
-  isDark.value = document.documentElement.classList.contains('dark');
+  // Check stored theme preference
+  const storedTheme = localStorage.getItem('theme');
+  if (storedTheme) {
+    themeMode.value = storedTheme;
+  }
+  
+  // Apply theme based on current mode
+  applyTheme();
   
   // Add resize listener to handle menu state
   window.addEventListener('resize', () => {
@@ -87,16 +94,37 @@ onMounted(() => {
   });
 });
 
-function toggleTheme() {
-  isDark.value = !isDark.value;
-  
-  if (isDark.value) {
+function applyTheme() {
+  if (themeMode.value === 'dark') {
     document.documentElement.classList.add('dark');
-    localStorage.setItem('theme', 'dark');
-  } else {
+  } else if (themeMode.value === 'light') {
     document.documentElement.classList.remove('dark');
-    localStorage.setItem('theme', 'light');
+  } else {
+    // System preference
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (systemPrefersDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }
+}
+
+function toggleTheme() {
+  // Cycle through themes: system -> light -> dark -> system
+  if (themeMode.value === 'system') {
+    themeMode.value = 'light';
+  } else if (themeMode.value === 'light') {
+    themeMode.value = 'dark';
+  } else {
+    themeMode.value = 'system';
+  }
+  
+  // Store preference
+  localStorage.setItem('theme', themeMode.value);
+  
+  // Apply the new theme
+  applyTheme();
 }
 </script>
 

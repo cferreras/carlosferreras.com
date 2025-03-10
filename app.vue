@@ -7,14 +7,19 @@ onMounted(() => {
   // Check for user preference in localStorage
   const theme = localStorage.getItem('theme');
   
-  // Check for system preference if no localStorage value
-  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-  // Apply dark mode if user prefers it or system prefers it
-  if (theme === 'dark' || (!theme && systemPrefersDark)) {
+  // Apply theme based on stored preference
+  if (theme === 'dark') {
     document.documentElement.classList.add('dark');
-  } else {
+  } else if (theme === 'light') {
     document.documentElement.classList.remove('dark');
+  } else {
+    // System preference (default)
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (systemPrefersDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }
 });
 </script>
