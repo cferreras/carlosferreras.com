@@ -1,0 +1,30 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const links = [
+    { href: 'https://opinacraft.com', text: 'Opinacraft', icon: 'lucide:external-link' },
+    { href: 'https://compos.akawonder.com', text: 'Compos', icon: 'lucide:external-link' },
+    { href: '/blog', text: 'Blog', icon: 'lucide:book-open' },
+];
+---
+
+<section class="w-full my-8">
+    <ul class="flex flex-col gap-4">
+        {links.map(link => (
+            <li>
+                <a href={link.href} target="_blank" rel="noopener noreferrer">
+                    {link.text}
+                    <Icon name={link.icon} />
+                </a>
+            </li>
+        ))}
+    </ul>
+</div>
+
+<style>
+    a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+</style>

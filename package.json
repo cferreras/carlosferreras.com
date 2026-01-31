@@ -9,8 +9,11 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@fontsource-variable/geist-mono": "^5.2.7",
+    "@iconify-json/lucide": "^1.2.87",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.17.1",
+    "astro-icon": "^1.1.5",
     "tailwindcss": "^4.1.18"
   }
 }

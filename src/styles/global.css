@@ -1,1 +1,16 @@
 @import "tailwindcss";
+@import '@fontsource-variable/geist-mono';
+
+@theme {
+  --color-default: #f5a623;
+}
+
+body {
+  font-family: 'Geist Mono Variable', monospace;
+  @apply bg-black;
+  @apply text-zinc-200
+}
+
+h1 {
+    @apply text-white;
+}
