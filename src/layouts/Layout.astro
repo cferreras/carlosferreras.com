@@ -1,6 +1,15 @@
 ---
+// Layout.astro
+interface Props {
+  maxWidth?: 'md' | 'xl';
+}
+
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+
+const { maxWidth = 'md' } = Astro.props;
+const maxWidthClass1 = maxWidth === 'xl' ? 'max-w-7xl' : 'max-w-xl';
+const maxWidthClass2 = maxWidth === 'xl' ? 'max-w-7xl' : 'max-w-md';
 ---
 
 <!doctype html>
@@ -15,8 +24,8 @@ import "../styles/global.css";
 	</head>
 	<body class="min-h-screen">
 		<div class="noise-overlay"></div>
-		<main class="min-h-screen flex flex-col items-left items-center justify-center p-4 max-w-xl mx-auto">
-			<div class="relative flex flex-col items-center justify-center max-w-md">
+		<main class={`min-h-screen flex flex-col items-left items-center justify-center p-4 ${maxWidthClass1} mx-auto`}>
+			<div class="relative flex flex-col items-center justify-center w-full">
 				<slot />
 
 			</div>

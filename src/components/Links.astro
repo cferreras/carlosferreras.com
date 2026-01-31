@@ -4,7 +4,7 @@ import { Icon } from 'astro-icon/components';
 const links = [
     { href: 'https://opinacraft.com', text: 'Opinacraft', icon: 'lucide:external-link' },
     { href: 'https://compos.akawonder.com', text: 'Compos', icon: 'lucide:external-link' },
-    { href: '/blog', text: 'Blog', icon: 'lucide:book-open' },
+    { href: '/blog', text: 'Blog', icon: 'lucide:book-open', target: '_self' },
 ];
 ---
 
@@ -12,7 +12,7 @@ const links = [
     <ul class="flex flex-col gap-4">
         {links.map((link, index) => (
             <li class="animate-in" style={`animation-delay: ${240 + index * 80}ms`}>
-                <a href={link.href} target="_blank" rel="noopener noreferrer">
+                <a href={link.href} target={link.target || "_blank"} rel="noopener noreferrer">
                     {link.text}
                     <Icon name={link.icon} />
                 </a>
@@ -20,6 +20,7 @@ const links = [
         ))}
     </ul>
 </div>
+</section>
 
 <style>
     a {

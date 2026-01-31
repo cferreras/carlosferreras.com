@@ -1,0 +1,14 @@
+---
+import PostList from "../components/PostList.astro";
+import Layout from "../layouts/Layout.astro";
+import { Icon } from 'astro-icon/components';
+---
+
+<Layout maxWidth="xl">
+    <div class="w-full max-w-xl">
+        <h1 class="text-left text-2xl font-bold mb-2">Blog</h1>
+        <p>Thoughts and updates from Carlos Ferreras.</p>
+        <PostList />
+    </div>
+    <a class="text-zinc-500 flex flex-row items-center gap-1 hover:text-white" href="/"><Icon name="lucide:arrow-left" />back</a>
+</Layout>
