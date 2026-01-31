@@ -1,0 +1,119 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: post,
+  }));
+}
+
+type Props = CollectionEntry<'posts'>;
+
+const post = Astro.props;
+const { Content } = await post.render();
+
+function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('es-ES', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+}
+---
+
+<Layout maxWidth="md">
+    <article class="w-full max-w-2xl animate-in">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>
+            <div class="flex flex-wrap items-center gap-4 text-zinc-500 text-sm">
+                <time datetime={post.data.pubDate.toISOString()}>
+                    {formatDate(post.data.pubDate)}
+                </time>
+                {post.data.updatedDate && (
+                    <span>
+                        (Actualizado: {formatDate(post.data.updatedDate)})
+                    </span>
+                )}
+    
+            </div>
+        </header>
+        
+        {post.data.heroImage && (
+            <img 
+                src={post.data.heroImage} 
+                alt={post.data.title}
+                class="w-full h-64 object-cover rounded-lg mb-8"
+            />
+        )}
+        
+        <div class="prose prose-invert prose-zinc max-w-none ">
+            <Content />
+        </div>
+    </article>
+    
+    <a 
+        class="text-zinc-500 flex flex-row items-center gap-1 hover:text-white mt-8 animate-in" 
+        href="/blog"
+    >
+        <Icon name="lucide:arrow-left" />back to blog
+    </a>
+</Layout>
+
+<style>
+    .prose {
+        color: #a1a1aa;
+    }
+    .prose :global(h1), .prose :global(h2), .prose :global(h3), .prose :global(h4) {
+        color: #fff;
+    }
+    .prose :global(p) {
+        margin-bottom: 1.25em;
+        line-height: 1.75;
+    }
+    .prose :global(ul), .prose :global(ol) {
+        margin-bottom: 1.25em;
+        padding-left: 1.5em;
+    }
+    .prose :global(ul) {
+        list-style-type: disc;
+    }
+    .prose :global(ol) {
+        list-style-type: decimal;
+    }
+    .prose :global(li) {
+        margin-bottom: 0.5em;
+        line-height: 1.75;
+    }
+    .prose :global(li::marker) {
+        color: #71717a;
+    }
+    .prose :global(a) {
+        color: #fff;
+        text-decoration: underline;
+    }
+    .prose :global(code) {
+        background-color: #27272a;
+        padding: 0.2em 0.4em;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+    }
+    .prose :global(pre) {
+        background-color: #27272a;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin-bottom: 1.25em;
+    }
+    .prose :global(pre code) {
+        background-color: transparent;
+        padding: 0;
+    }
+    .prose :global(h2), .prose :global(h3) {
+        margin-top: 1.5em;
+        margin-bottom: 0.75em;
+    }
+</style>

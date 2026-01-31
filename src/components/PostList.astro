@@ -1,13 +1,43 @@
-<!-- TODO: Make this section dynamic by fetching using astro Content with local markdown files -->
+---
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+
+const posts = await getCollection('posts', ({ data }) => {
+  return import.meta.env.DEV || !data.draft;
+});
+
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('es-ES', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+}
+---
+
 <section class="w-full my-8">
     <div class="flex flex-col gap-4">
-        <a class="flex flex-row justify-between border-dashed border-b border-zinc-700 pb-2 hover:font-bold">
-            <div class="col-span-3">Review de compos</div>
-            <div>20 de Enero, 2025</div>
-        </a>
-        <a class="flex flex-row justify-between border-dashed border-b border-zinc-700 pb-2 hover:font-bold">
-            <div class="col-span-3">Mi primera entrada al blog</div>
-            <div>1 de Enero, 2025</div>
-        </a>
+        {sortedPosts.length === 0 ? (
+            <p class="text-zinc-500">No hay posts disponibles todavía.</p>
+        ) : (
+            sortedPosts.map((post) => (
+                <a 
+                    href={`/blog/${post.id}`} 
+                    class="flex flex-row justify-between border-dashed border-b border-zinc-700 pb-2 hover:font-bold group"
+                >
+                    <div class="col-span-3 flex items-center gap-2">
+                        {post.data.draft && (
+                            <span class="text-xs bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded">Draft</span>
+                        )}
+                        {post.data.title}
+                    </div>
+                    <div class="text-zinc-500 group-hover:text-white transition-colors">
+                        {formatDate(post.data.pubDate)}
+                    </div>
+                </a>
+            ))
+        )}
     </div>
 </section>
