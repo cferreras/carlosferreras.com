@@ -1,19 +1,50 @@
 ---
 interface Props {
   currentLang: 'es' | 'en';
+  alternativeUrls?: {
+    es?: string;
+    en?: string;
+  };
 }
 
-const { currentLang } = Astro.props;
+const { currentLang, alternativeUrls } = Astro.props;
 
 // Obtener la ruta actual sin el prefijo de idioma
 const currentPath = Astro.url.pathname;
 const pathWithoutLang = currentPath.replace(/^\/en/, '') || '/';
 
-// Construir las URLs para cada idioma
-// ES es el idioma por defecto, no tiene prefijo
-const esUrl = pathWithoutLang;
-// EN siempre tiene prefijo /en
-const enUrl = `/en${pathWithoutLang === '/' ? '' : pathWithoutLang}`;
+// Determinar las URLs para cada idioma
+let esUrl: string;
+let enUrl: string;
+
+if (alternativeUrls) {
+  // Si se proporcionan URLs alternativas específicas (ej: desde un post), usarlas
+  esUrl = alternativeUrls.es ?? '/';
+  enUrl = alternativeUrls.en ?? '/en/';
+} else {
+  // Lógica por defecto: intercambiar prefijos
+  // Si estamos en /en/blog/my-post.md y pulsamos ES -> /blog/my-post.md
+  // Pero si el post no existe en español, esto dará 404
+  // Por eso detectamos si estamos en un post individual
+  
+  const isBlogPost = pathWithoutLang.match(/^\/blog\/.+\.(md|mdx)$/);
+  
+  if (isBlogPost && currentLang === 'en') {
+    // Estamos en un post en inglés y queremos ir al español
+    // Como no sabemos si existe equivalente, vamos al listado de posts
+    esUrl = '/blog/';
+    enUrl = currentPath; // Ya estamos aquí
+  } else if (isBlogPost && currentLang === 'es') {
+    // Estamos en un post en español y queremos ir al inglés
+    // Vamos al listado de posts en inglés
+    esUrl = currentPath;
+    enUrl = '/en/blog/';
+  } else {
+    // No es un post, usar la ruta normal
+    esUrl = pathWithoutLang;
+    enUrl = `/en${pathWithoutLang === '/' ? '' : pathWithoutLang}`;
+  }
+}
 ---
 
 <div class="language-switcher animate-in delay-1">

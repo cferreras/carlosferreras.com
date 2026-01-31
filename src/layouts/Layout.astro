@@ -29,12 +29,12 @@ const maxWidthClass2 = maxWidth === 'xl' ? 'max-w-7xl' : 'max-w-md';
 		<meta name="description" content={t.site.description} />
 		<ClientRouter />
 	</head>
-	<body class="min-h-screen">
+	<body class="min-h-screen flex flex-col">
 		<div class="noise-overlay"></div>
 		<div class="fixed top-4 right-4 z-50">
 			<LanguageSwitcher currentLang={lang} />
 		</div>
-		<main class={`min-h-screen flex flex-col items-left items-center justify-center p-4 ${maxWidthClass1} mx-auto`} transition:animate="fade">
+		<main class={`flex-1 flex flex-col items-left items-center justify-center p-4 ${maxWidthClass1} mx-auto w-full`} transition:animate="fade">
 			<div class="relative flex flex-col items-center justify-center w-full">
 				<slot />
 			</div>
