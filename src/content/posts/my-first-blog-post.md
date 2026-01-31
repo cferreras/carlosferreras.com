@@ -1,8 +1,10 @@
 ---
 title: 'My first blog post'
-description: 'This is my first blog post, starting this new journey.'
+description: 'This is my first blog post, starting this new journey. Discover what I will share about web development and design.'
 pubDate: 2025-01-31
 lang: en
+author: 'Carlos Ferreras'
+tags: ['astro', 'web development', 'blog', 'personal']
 ---
 
 # My first blog post

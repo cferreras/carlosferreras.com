@@ -1,0 +1,249 @@
+---
+import type { Lang } from '../i18n/translations';
+
+interface OpenGraphImage {
+  url: string;
+  width?: number;
+  height?: number;
+  alt?: string;
+}
+
+interface Props {
+  // Basic
+  title: string;
+  description: string;
+  lang: Lang;
+  
+  // Optional
+  keywords?: string[];
+  author?: string;
+  canonicalUrl?: string;
+  robots?: string;
+  
+  // Open Graph
+  ogType?: 'website' | 'article' | 'profile';
+  ogImage?: string | OpenGraphImage;
+  ogSiteName?: string;
+  ogLocale?: string;
+  
+  // Twitter
+  twitterCard?: 'summary' | 'summary_large_image' | 'app' | 'player';
+  twitterCreator?: string;
+  twitterSite?: string;
+  
+  // Article specific (for blog posts)
+  article?: {
+    publishedTime: Date;
+    modifiedTime?: Date;
+    author: string;
+    tags?: string[];
+  };
+  
+  // Alternate languages
+  alternateLangs?: Array<{
+    lang: Lang;
+    url: string;
+  }>;
+  
+  // JSON-LD structured data
+  jsonLd?: object | object[];
+}
+
+const {
+  // Basic with defaults
+  title,
+  description,
+  lang,
+  keywords = [],
+  author = 'Carlos Ferreras',
+  canonicalUrl,
+  robots = 'index, follow',
+  
+  // Open Graph with defaults
+  ogType = 'website',
+  ogImage,
+  ogSiteName = 'Carlos Ferreras',
+  ogLocale = lang === 'es' ? 'es_ES' : 'en_US',
+  
+  // Twitter with defaults
+  twitterCard = 'summary_large_image',
+  twitterCreator = '@carlosferreras',
+  twitterSite = '@carlosferreras',
+  
+  // Article
+  article,
+  
+  // Alternate languages
+  alternateLangs = [],
+  
+  // JSON-LD
+  jsonLd,
+} = Astro.props;
+
+// Site URL from environment or default
+const siteUrl = import.meta.env.SITE || 'https://carlosferreras.com';
+const currentPath = Astro.url.pathname;
+const fullCanonicalUrl = canonicalUrl || `${siteUrl}${currentPath}`;
+
+// Process OG Image
+const ogImageData: OpenGraphImage | undefined = typeof ogImage === 'string' 
+  ? { url: ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}` }
+  : ogImage;
+
+// Default OG image if none provided
+const defaultOgImage = `${siteUrl}/og-image.jpg`;
+const finalOgImage = ogImageData?.url || defaultOgImage;
+
+// Build JSON-LD structured data
+const baseJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    // Website
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: 'Carlos Ferreras',
+      description: lang === 'es' 
+        ? 'Desarrollador web y diseñador basado en España'
+        : 'Web developer and designer based in Spain',
+      inLanguage: lang === 'es' ? 'es-ES' : 'en-US',
+    },
+    // Person (Author)
+    {
+      '@type': 'Person',
+      '@id': `${siteUrl}/#/schema/person/carlos-ferreras`,
+      name: 'Carlos Ferreras',
+      url: siteUrl,
+      sameAs: [
+        'https://github.com/carlosferreras',
+        'https://linkedin.com/in/carlosferreras',
+        'https://twitter.com/carlosferreras',
+      ],
+      jobTitle: lang === 'es' ? 'Desarrollador Web y Diseñador' : 'Web Developer and Designer',
+      worksFor: {
+        '@type': 'Organization',
+        name: 'Freelance',
+      },
+    },
+  ],
+};
+
+// Add WebPage to JSON-LD
+const webPageJsonLd = {
+  '@type': 'WebPage',
+  '@id': `${fullCanonicalUrl}#webpage`,
+  url: fullCanonicalUrl,
+  name: title,
+  description: description,
+  inLanguage: lang === 'es' ? 'es-ES' : 'en-US',
+  isPartOf: { '@id': `${siteUrl}/#website` },
+  ...(article && {
+    datePublished: article.publishedTime.toISOString(),
+    dateModified: article.modifiedTime?.toISOString() || article.publishedTime.toISOString(),
+    author: { '@id': `${siteUrl}/#/schema/person/carlos-ferreras` },
+  }),
+};
+
+// Add BlogPosting if it's an article
+const blogPostingJsonLd = article ? {
+  '@type': 'BlogPosting',
+  '@id': `${fullCanonicalUrl}#article`,
+  isPartOf: { '@id': `${fullCanonicalUrl}#webpage` },
+  headline: title,
+  description: description,
+  url: fullCanonicalUrl,
+  datePublished: article.publishedTime.toISOString(),
+  dateModified: article.modifiedTime?.toISOString() || article.publishedTime.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: article.author,
+    '@id': `${siteUrl}/#/schema/person/carlos-ferreras`,
+  },
+  publisher: {
+    '@type': 'Person',
+    name: 'Carlos Ferreras',
+    '@id': `${siteUrl}/#/schema/person/carlos-ferreras`,
+  },
+  inLanguage: lang === 'es' ? 'es-ES' : 'en-US',
+  ...(ogImageData?.url && {
+    image: {
+      '@type': 'ImageObject',
+      url: ogImageData.url,
+      ...(ogImageData.width && { width: ogImageData.width }),
+      ...(ogImageData.height && { height: ogImageData.height }),
+    },
+  }),
+  ...(article.tags && { keywords: article.tags.join(', ') }),
+} : null;
+
+// Merge all JSON-LD data
+const finalJsonLd = {
+  ...baseJsonLd,
+  '@graph': [
+    ...baseJsonLd['@graph'],
+    webPageJsonLd,
+    ...(blogPostingJsonLd ? [blogPostingJsonLd] : []),
+    ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []),
+  ],
+};
+
+const jsonLdScript = JSON.stringify(finalJsonLd);
+---
+
+<!-- Basic Meta Tags -->
+<meta name="description" content={description} />
+{keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+<meta name="author" content={author} />
+<meta name="robots" content={robots} />
+<meta name="googlebot" content={robots} />
+<link rel="canonical" href={fullCanonicalUrl} />
+
+<!-- Alternate Languages / Hreflang -->
+{alternateLangs.map(({ lang: altLang, url }) => (
+  <link rel="alternate" hreflang={altLang === 'es' ? 'es-ES' : 'en-US'} href={url} />
+))}
+{/* Default x-default hreflang */}
+<link rel="alternate" hreflang="x-default" href={alternateLangs.find(l => l.lang === 'en')?.url || fullCanonicalUrl} />
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={fullCanonicalUrl} />
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={ogSiteName} />
+<meta property="og:locale" content={ogLocale} />
+<meta property="og:image" content={finalOgImage} />
+{ogImageData?.width && <meta property="og:image:width" content={String(ogImageData.width)} />}
+{ogImageData?.height && <meta property="og:image:height" content={String(ogImageData.height)} />}
+{ogImageData?.alt && <meta property="og:image:alt" content={ogImageData.alt} />}
+
+<!-- Article specific OG tags -->
+{article && (
+  <>
+    <meta property="article:published_time" content={article.publishedTime.toISOString()} />
+    {article.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime.toISOString()} />}
+    <meta property="article:author" content={article.author} />
+    {article.tags?.map(tag => (
+      <meta property="article:tag" content={tag} />
+    ))}
+  </>
+)}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content={twitterCard} />
+<meta name="twitter:site" content={twitterSite} />
+<meta name="twitter:creator" content={twitterCreator} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={finalOgImage} />
+{ogImageData?.alt && <meta name="twitter:image:alt" content={ogImageData.alt} />}
+
+<!-- Additional SEO Meta Tags -->
+<meta name="theme-color" content="#000000" />
+<meta name="msapplication-TileColor" content="#000000" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json" set:html={jsonLdScript} />

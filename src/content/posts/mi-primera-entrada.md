@@ -1,8 +1,10 @@
 ---
 title: 'Mi primera entrada al blog'
-description: 'Esta es mi primera entrada al blog, empezando este nuevo viaje.'
+description: 'Esta es mi primera entrada al blog, empezando este nuevo viaje. Descubre lo que compartiré sobre desarrollo web y diseño.'
 pubDate: 2025-01-31
 lang: es
+author: 'Carlos Ferreras'
+tags: ['astro', 'desarrollo web', 'blog', 'personal']
 ---
 
 # Mi primera entrada al blog

@@ -3,30 +3,78 @@
 import { ClientRouter } from 'astro:transitions';
 import Footer from "../components/Footer.astro";
 import LanguageSwitcher from "../components/LanguageSwitcher.astro";
+import SEO from "../components/SEO.astro";
 import { getTranslations, type Lang } from "../i18n/translations";
 import "../styles/global.css";
 
 interface Props {
   maxWidth?: 'md' | 'xl';
   lang?: Lang;
+  seo?: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    ogType?: 'website' | 'article' | 'profile';
+    ogImage?: string;
+    canonicalUrl?: string;
+    noindex?: boolean;
+    article?: {
+      publishedTime: Date;
+      modifiedTime?: Date;
+      author: string;
+      tags?: string[];
+    };
+  };
 }
 
-const { maxWidth = 'md', lang = 'es' } = Astro.props;
+const { maxWidth = 'md', lang = 'es', seo } = Astro.props;
 const t = getTranslations(lang);
 const maxWidthClass1 = maxWidth === 'xl' ? 'max-w-7xl' : 'max-w-xl';
 const maxWidthClass2 = maxWidth === 'xl' ? 'max-w-7xl' : 'max-w-md';
+
+// Build alternate language URLs
+const currentPath = Astro.url.pathname;
+const baseUrl = t.site.url;
+const alternateLang = lang === 'es' ? 'en' : 'es';
+const alternatePath = currentPath.replace(/^\/(es|en)\//, '/').replace(/^\//, `/${alternateLang}/`);
+const alternateUrl = `${baseUrl}${alternatePath}`;
+const currentUrl = `${baseUrl}${currentPath}`;
+
+const alternateLangs = [
+  { lang: alternateLang, url: alternateUrl },
+];
+
+// SEO configuration
+const seoTitle = seo?.title || t.site.title;
+const seoDescription = seo?.description || t.site.description;
+const seoKeywords = seo?.keywords || t.site.keywords;
 ---
 
 <!doctype html>
 <html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{t.site.title}</title>
-		<meta name="description" content={t.site.description} />
+		
+		<!-- SEO Component -->
+		<SEO
+			title={seoTitle}
+			description={seoDescription}
+			lang={lang}
+			keywords={seoKeywords}
+			author={t.site.author}
+			canonicalUrl={seo?.canonicalUrl || currentUrl}
+			robots={seo?.noindex ? 'noindex, nofollow' : 'index, follow'}
+			ogType={seo?.ogType || 'website'}
+			ogImage={seo?.ogImage || t.site.ogImage}
+			ogSiteName={t.site.title}
+			alternateLangs={alternateLangs}
+			article={seo?.article}
+		/>
+		
 		<ClientRouter />
 	</head>
 	<body class="min-h-screen flex flex-col">

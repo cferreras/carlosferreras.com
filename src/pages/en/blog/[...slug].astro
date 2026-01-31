@@ -25,9 +25,24 @@ function formatDate(date: Date): string {
     year: 'numeric',
   }).format(date);
 }
+
+// SEO configuration for blog post
+const seo = {
+  title: `${post.data.title} | Carlos Ferreras`,
+  description: post.data.description || `Article by Carlos Ferreras about ${post.data.title}`,
+  keywords: post.data.tags || [],
+  ogType: 'article' as const,
+  ogImage: post.data.heroImage,
+  article: {
+    publishedTime: post.data.pubDate,
+    modifiedTime: post.data.updatedDate,
+    author: post.data.author || t.site.author,
+    tags: post.data.tags,
+  },
+};
 ---
 
-<Layout maxWidth="md" lang="en">
+<Layout maxWidth="md" lang="en" seo={seo}>
     <article class="w-full max-w-2xl animate-in" transition:name="content">
         <header class="mb-8">
             <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>

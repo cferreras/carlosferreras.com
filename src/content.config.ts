@@ -10,6 +10,8 @@ const posts = defineCollection({
     heroImage: z.string().optional(),
     lang: z.enum(['es', 'en']).default('es'),
     draft: z.boolean().optional().default(false),
+    author: z.string().optional(),
+    tags: z.array(z.string()).optional(),
   }),
 });
 
