@@ -6,9 +6,11 @@ import { Icon } from 'astro-icon/components';
 
 <Layout maxWidth="xl">
     <div class="w-full max-w-xl">
-        <h1 class="text-left text-2xl font-bold mb-2">Blog</h1>
-        <p>Thoughts and updates from Carlos Ferreras.</p>
-        <PostList />
+        <h1 class="text-left text-2xl font-bold mb-2 animate-in delay-0">Blog</h1>
+        <p class="animate-in delay-1">Thoughts and updates from Carlos Ferreras.</p>
+        <div class="animate-in delay-2">
+            <PostList />
+        </div>
     </div>
-    <a class="text-zinc-500 flex flex-row items-center gap-1 hover:text-white" href="/"><Icon name="lucide:arrow-left" />back</a>
+    <a class="text-zinc-500 flex flex-row items-center gap-1 hover:text-white animate-in delay-3" href="/"><Icon name="lucide:arrow-left" />back</a>
 </Layout>
