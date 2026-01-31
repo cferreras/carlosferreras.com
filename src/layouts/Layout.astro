@@ -4,6 +4,7 @@ interface Props {
   maxWidth?: 'md' | 'xl';
 }
 
+import { ClientRouter } from 'astro:transitions';
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 
@@ -21,13 +22,13 @@ const maxWidthClass2 = maxWidth === 'xl' ? 'max-w-7xl' : 'max-w-md';
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro Basics</title>
+		<ClientRouter />
 	</head>
 	<body class="min-h-screen">
 		<div class="noise-overlay"></div>
-		<main class={`min-h-screen flex flex-col items-left items-center justify-center p-4 ${maxWidthClass1} mx-auto`}>
+		<main class={`min-h-screen flex flex-col items-left items-center justify-center p-4 ${maxWidthClass1} mx-auto`} transition:animate="fade">
 			<div class="relative flex flex-col items-center justify-center w-full">
 				<slot />
-
 			</div>
 		</main>
 		<Footer/>
