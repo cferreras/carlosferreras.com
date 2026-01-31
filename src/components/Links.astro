@@ -20,7 +20,7 @@ const links = [
     <ul class="flex flex-col gap-4">
         {links.map((link, index) => (
             <li class="animate-in" style={`animation-delay: ${240 + index * 80}ms`}>
-                <a href={link.href} target={link.target || "_blank"} rel="noopener noreferrer">
+                <a class="hover:font-bold" href={link.href} target={link.target || "_blank"} rel="noopener noreferrer">
                     {link.text}
                     <Icon name={link.icon} />
                 </a>
