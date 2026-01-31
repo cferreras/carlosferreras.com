@@ -34,12 +34,12 @@ const maxWidthClass2 = maxWidth === 'xl' ? 'max-w-7xl' : 'max-w-md';
 		<div class="fixed top-4 right-4 z-50">
 			<LanguageSwitcher currentLang={lang} />
 		</div>
-		<main class={`flex-1 flex flex-col items-left items-center justify-center p-4 ${maxWidthClass1} mx-auto w-full`} transition:animate="fade">
+		<main class={`flex-1 flex flex-col items-center justify-center p-4 ${maxWidthClass1} mx-auto w-full`} transition:animate="fade" transition:name="main">
 			<div class="relative flex flex-col items-center justify-center w-full">
 				<slot />
 			</div>
 		</main>
-		<Footer lang={lang} />
+		<Footer lang={lang} transition:name="footer" transition:persist />
 	</body>
 </html>
 

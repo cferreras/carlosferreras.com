@@ -4,7 +4,13 @@ import Links from '../components/Links.astro';
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout lang="es">
-	<Header lang="es" />
-	<Links lang="es" />
+<Layout maxWidth="xl" lang="es">
+	<div class="w-full max-w-xl" transition:name="content">
+		<div class="animate-in delay-0">
+			<Header lang="es" />
+		</div>
+		<div class="animate-in delay-1">
+			<Links lang="es" />
+		</div>
+	</div>
 </Layout>

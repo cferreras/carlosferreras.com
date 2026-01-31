@@ -16,7 +16,7 @@ const links = [
 ];
 ---
 
-<section class="w-full my-8">
+<section class="w-full my-8 flex">
     <ul class="flex flex-col gap-4">
         {links.map((link, index) => (
             <li class="animate-in" style={`animation-delay: ${240 + index * 80}ms`}>
@@ -27,7 +27,6 @@ const links = [
             </li>
         ))}
     </ul>
-</div>
 </section>
 
 <style>

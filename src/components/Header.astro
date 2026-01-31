@@ -11,9 +11,9 @@ const t = getTranslations(lang);
 
 <div class="w-full">
 	<h1 class="text-xl font-bold animate-in delay-0">{t.header.name}</h1>
-	<details class="min-w-md animate-in delay-1">
-		<summary>{t.header.about}</summary>
-		<p>
+	<details class="w-full animate-in delay-1">
+		<summary class="cursor-pointer">{t.header.about}</summary>
+		<p class="mt-2">
 			{t.header.aboutText}
 		</p>
 	</details>
