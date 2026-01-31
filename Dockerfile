@@ -19,11 +19,11 @@ COPY . .
 # Build del sitio Astro
 RUN pnpm build
 
-# Etapa de producción - servidor estático ligero
+# Etapa de producción - servidor estático
 FROM node:22-alpine
 
-# Instalar serve
-RUN npm install -g serve
+# Instalar http-server (mejor manejo de rutas estáticas)
+RUN npm install -g http-server
 
 # Directorio de trabajo
 WORKDIR /app
@@ -31,8 +31,12 @@ WORKDIR /app
 # Copiar archivos estáticos desde el builder
 COPY --from=builder /app/dist ./dist
 
-# Exponer puerto 3000 (puerto por defecto de serve)
-EXPOSE 3000
+# Exponer puerto 8080
+EXPOSE 8080
 
 # Iniciar servidor estático
-CMD ["serve", "dist", "-l", "3000"]
+# -p 8080: puerto
+# --gzip: compresión
+# -c-1: sin cache (para desarrollo, quitar en prod si quieres cache)
+# -s: modo silencioso (opcional)
+CMD ["http-server", "dist", "-p", "8080", "--gzip", "-s"]
