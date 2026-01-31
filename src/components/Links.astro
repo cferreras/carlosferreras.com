@@ -10,8 +10,8 @@ const links = [
 
 <section class="w-full my-8">
     <ul class="flex flex-col gap-4">
-        {links.map(link => (
-            <li>
+        {links.map((link, index) => (
+            <li class="animate-in" style={`animation-delay: ${240 + index * 80}ms`}>
                 <a href={link.href} target="_blank" rel="noopener noreferrer">
                     {link.text}
                     <Icon name={link.icon} />
