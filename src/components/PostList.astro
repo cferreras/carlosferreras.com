@@ -1,30 +1,42 @@
 ---
 import { getCollection } from 'astro:content';
 import { Icon } from 'astro-icon/components';
+import { getTranslations, type Lang } from "../i18n/translations";
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getTranslations(lang);
 
 const posts = await getCollection('posts', ({ data }) => {
-  return import.meta.env.DEV || !data.draft;
+  const isPublished = import.meta.env.DEV || !data.draft;
+  const isCorrectLang = data.lang === lang;
+  return isPublished && isCorrectLang;
 });
 
 const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('es-ES', {
+  return new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   }).format(date);
 }
+
+const basePath = lang === 'es' ? '/blog' : '/en/blog';
 ---
 
 <section class="w-full my-8">
     <div class="flex flex-col gap-4">
         {sortedPosts.length === 0 ? (
-            <p class="text-zinc-500">No hay posts disponibles todavía.</p>
+            <p class="text-zinc-500">{lang === 'es' ? 'No hay posts disponibles todavía.' : 'No posts available yet.'}</p>
         ) : (
             sortedPosts.map((post) => (
                 <a 
-                    href={`/blog/${post.id}`} 
+                    href={`${basePath}/${post.id}`} 
                     class="flex flex-row justify-between border-dashed border-b border-zinc-700 pb-2 hover:font-bold group"
                 >
                     <div class="col-span-3 flex items-center gap-2">

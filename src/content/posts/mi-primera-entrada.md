@@ -2,7 +2,7 @@
 title: 'Mi primera entrada al blog'
 description: 'Esta es mi primera entrada al blog, empezando este nuevo viaje.'
 pubDate: 2025-01-31
-
+lang: es
 ---
 
 # Mi primera entrada al blog

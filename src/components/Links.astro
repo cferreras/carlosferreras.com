@@ -1,10 +1,18 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { getTranslations, type Lang } from "../i18n/translations";
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getTranslations(lang);
 
 const links = [
     { href: 'https://opinacraft.com', text: 'Opinacraft', icon: 'lucide:external-link' },
     { href: 'https://compos.akawonder.com', text: 'Compos', icon: 'lucide:external-link' },
-    { href: '/blog', text: 'Blog', icon: 'lucide:book-open', target: '_self' },
+    { href: lang === 'es' ? '/blog' : '/en/blog', text: t.links.blog, icon: 'lucide:book-open', target: '_self' },
 ];
 ---
 

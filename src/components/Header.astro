@@ -1,15 +1,20 @@
 ---
-import astroLogo from '../assets/astro.svg';
-import background from '../assets/background.svg';
+import { getTranslations, type Lang } from "../i18n/translations";
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getTranslations(lang);
 ---
 
 <div class="w-full">
-	<h1 class="text-xl font-bold animate-in delay-0">Carlos Ferreras</h1>
+	<h1 class="text-xl font-bold animate-in delay-0">{t.header.name}</h1>
 	<details class="min-w-md animate-in delay-1">
-		<summary>About me</summary>
+		<summary>{t.header.about}</summary>
 		<p>
-			I'm a web developer and designer based in Spain. I love creating beautiful and functional websites and applications.
+			{t.header.aboutText}
 		</p>
 	</details>
 </div>
-

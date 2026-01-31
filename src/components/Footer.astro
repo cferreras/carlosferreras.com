@@ -1,3 +1,14 @@
+---
+import { getTranslations, type Lang } from "../i18n/translations";
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const t = getTranslations(lang);
+---
+
 <footer class="-mt-20 text-center text-sm text-zinc-500 relative z-10">
-    Built with ❤️ using Astro. Check it out at <a class="text-white" href="https://github.com/withastro/astro" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    {t.footer.text} <a class="text-white hover:text-zinc-300 transition-colors" href="https://github.com/withastro/astro" target="_blank" rel="noopener noreferrer">GitHub</a>.
 </footer>

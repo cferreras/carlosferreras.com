@@ -1,11 +1,11 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../../layouts/Layout.astro';
 import { Icon } from 'astro-icon/components';
-import { getTranslations } from '../../i18n/translations';
+import { getTranslations } from '../../../i18n/translations';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts', ({ data }) => data.lang === 'es');
+  const posts = await getCollection('posts', ({ data }) => data.lang === 'en');
   return posts.map((post) => ({
     params: { slug: post.id },
     props: post,
@@ -16,10 +16,10 @@ type Props = CollectionEntry<'posts'>;
 
 const post = Astro.props;
 const { Content } = await post.render();
-const t = getTranslations('es');
+const t = getTranslations('en');
 
 function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('es-ES', {
+  return new Intl.DateTimeFormat('en-US', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -27,7 +27,7 @@ function formatDate(date: Date): string {
 }
 ---
 
-<Layout maxWidth="md" lang="es">
+<Layout maxWidth="md" lang="en">
     <article class="w-full max-w-2xl animate-in">
         <header class="mb-8">
             <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>
@@ -37,7 +37,7 @@ function formatDate(date: Date): string {
                 </time>
                 {post.data.updatedDate && (
                     <span>
-                        (Actualizado: {formatDate(post.data.updatedDate)})
+                        (Updated: {formatDate(post.data.updatedDate)})
                     </span>
                 )}
     
@@ -59,9 +59,9 @@ function formatDate(date: Date): string {
     
     <a 
         class="text-zinc-500 flex flex-row items-center gap-1 hover:text-white mt-8 animate-in" 
-        href="/blog"
+        href="/en/blog"
     >
-        <Icon name="lucide:arrow-left" />volver al blog
+        <Icon name="lucide:arrow-left" />back to blog
     </a>
 </Layout>
 

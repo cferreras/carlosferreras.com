@@ -1,13 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
+import { getTranslations, type Lang } from "../i18n/translations";
+
+// Detectar idioma de la URL
+const currentPath = Astro.url.pathname;
+const lang: Lang = currentPath.startsWith('/en') ? 'en' : 'es';
+const t = getTranslations(lang);
+
+const homeUrl = lang === 'en' ? '/en/' : '/';
 ---
 
-<Layout>
-    <div>
-        <div class="text-2xl flex items-center gap-4">
-                <Icon size="1.5rem" name="lucide:circle-x" />
-                <div>404 - Page Not Found</div>
+<Layout lang={lang}>
+    <div class="animate-in">
+        <div class="text-2xl flex items-center gap-4 mb-4">
+            <Icon size="1.5rem" name="lucide:circle-x" />
+            <div>404 - {lang === 'es' ? 'Página no encontrada' : 'Page Not Found'}</div>
         </div>
+        <a href={homeUrl} class="text-zinc-500 hover:text-white flex items-center gap-2 text-sm">
+            <Icon name="lucide:arrow-left" size="1rem" />
+            {lang === 'es' ? 'Volver al inicio' : 'Back to home'}
+        </a>
     </div>
 </Layout>
