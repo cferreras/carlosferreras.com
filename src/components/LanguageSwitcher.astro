@@ -27,7 +27,7 @@ if (alternativeUrls) {
   // Pero si el post no existe en español, esto dará 404
   // Por eso detectamos si estamos en un post individual
   
-  const isBlogPost = pathWithoutLang.match(/^\/blog\/.+\.(md|mdx)$/);
+  const isBlogPost = pathWithoutLang.match(/^\/blog\/.+/);
   
   if (isBlogPost && currentLang === 'en') {
     // Estamos en un post en inglés y queremos ir al español

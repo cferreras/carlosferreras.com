@@ -10,6 +10,10 @@ import "../styles/global.css";
 interface Props {
   maxWidth?: 'md' | 'xl';
   lang?: Lang;
+  alternativeUrls?: {
+    es?: string;
+    en?: string;
+  };
   seo?: {
     title?: string;
     description?: string;
@@ -27,7 +31,7 @@ interface Props {
   };
 }
 
-const { maxWidth = 'md', lang = 'es', seo } = Astro.props;
+const { maxWidth = 'md', lang = 'es', seo, alternativeUrls } = Astro.props;
 const t = getTranslations(lang);
 const maxWidthClass1 = maxWidth === 'xl' ? 'max-w-7xl' : 'max-w-xl';
 const maxWidthClass2 = maxWidth === 'xl' ? 'max-w-7xl' : 'max-w-md';
@@ -80,7 +84,7 @@ const seoKeywords = seo?.keywords || t.site.keywords;
 	<body class="min-h-screen flex flex-col">
 		<div class="noise-overlay"></div>
 		<div class="fixed top-4 right-4 z-50">
-			<LanguageSwitcher currentLang={lang} />
+			<LanguageSwitcher currentLang={lang} alternativeUrls={alternativeUrls} />
 		</div>
 		<main class={`flex-1 flex flex-col items-center justify-center p-4 ${maxWidthClass1} mx-auto w-full`} transition:animate="fade" transition:name="main">
 			<div class="relative flex flex-col items-center justify-center w-full">

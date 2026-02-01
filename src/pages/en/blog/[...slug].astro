@@ -7,7 +7,7 @@ import { getTranslations } from '../../../i18n/translations';
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => data.lang === 'en');
   return posts.map((post) => ({
-    params: { slug: post.id },
+    params: { slug: post.id.replace(/\.md$/, '') },
     props: post,
   }));
 }
@@ -26,7 +26,24 @@ function formatDate(date: Date): string {
   }).format(date);
 }
 
+// Buscar el post traducido
+let esUrl = '/blog/';
+if (post.data.translationKey) {
+  const allPosts = await getCollection('posts');
+  const translatedPost = allPosts.find(
+    (p) => p.data.translationKey === post.data.translationKey && p.data.lang === 'es'
+  );
+  if (translatedPost) {
+    esUrl = `/blog/${translatedPost.id.replace(/\.md$/, '')}`;
+  }
+}
+
 // SEO configuration for blog post
+const alternativeUrls = {
+  es: esUrl,
+  en: Astro.url.pathname,
+};
+
 const seo = {
   title: `${post.data.title} | Carlos Ferreras`,
   description: post.data.description || `Article by Carlos Ferreras about ${post.data.title}`,
@@ -42,7 +59,7 @@ const seo = {
 };
 ---
 
-<Layout maxWidth="md" lang="en" seo={seo}>
+<Layout maxWidth="md" lang="en" seo={seo} alternativeUrls={alternativeUrls}>
     <article class="w-full max-w-2xl animate-in" transition:name="content">
         <header class="mb-8">
             <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>

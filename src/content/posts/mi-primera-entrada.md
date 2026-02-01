@@ -5,6 +5,7 @@ pubDate: 2025-01-31
 lang: es
 author: 'Carlos Ferreras'
 tags: ['astro', 'desarrollo web', 'blog', 'personal']
+translationKey: 'first-post'
 ---
 
 # Mi primera entrada al blog

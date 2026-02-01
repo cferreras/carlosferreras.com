@@ -36,7 +36,7 @@ const basePath = lang === 'es' ? '/blog' : '/en/blog';
         ) : (
             sortedPosts.map((post) => (
                 <a 
-                    href={`${basePath}/${post.id}`} 
+                    href={`${basePath}/${post.id.replace(/\.md$/, '')}`} 
                     class="flex flex-row justify-between border-dashed border-b border-zinc-700 pb-2 hover:font-bold group"
                 >
                     <div class="col-span-3 flex items-center gap-2">
