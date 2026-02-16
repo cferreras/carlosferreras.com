@@ -61,18 +61,17 @@ const seo = {
 
 <Layout maxWidth="md" lang="es" seo={seo} alternativeUrls={alternativeUrls}>
     <article class="w-full max-w-2xl animate-in" transition:name="content">
-        <header class="mb-8">
-            <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>
-            <div class="flex flex-wrap items-center gap-4 text-zinc-500 text-sm">
+        <header class="mb-10">
+            <h1 class="text-2xl font-medium mb-4 leading-tight">{post.data.title}</h1>
+            <div class="flex flex-wrap items-center gap-3 text-xs text-zinc-600">
                 <time datetime={post.data.pubDate.toISOString()}>
                     {formatDate(post.data.pubDate)}
                 </time>
                 {post.data.updatedDate && (
-                    <span>
-                        (Actualizado: {formatDate(post.data.updatedDate)})
+                    <span class="updated-badge">
+                        Actualizado: {formatDate(post.data.updatedDate)}
                     </span>
                 )}
-    
             </div>
         </header>
         
@@ -80,36 +79,68 @@ const seo = {
             <img 
                 src={post.data.heroImage} 
                 alt={post.data.title}
-                class="w-full h-64 object-cover rounded-lg mb-8"
+                class="w-full h-64 object-cover mb-10"
             />
         )}
         
-        <div class="prose prose-invert prose-zinc max-w-none ">
+        <div class="prose prose-invert prose-zinc max-w-none">
             <Content />
         </div>
     </article>
     
     <a 
-        class="text-zinc-500 flex flex-row items-center gap-1 hover:text-white mt-8 animate-in" 
+        class="back-link mt-12 animate-in" 
         href="/blog"
     >
-        <Icon name="lucide:arrow-left" />volver al blog
+        <Icon name="lucide:arrow-left" class="w-4 h-4" />
+        <span>volver al blog</span>
     </a>
 </Layout>
 
 <style>
+    .updated-badge {
+        color: #52525b;
+        padding: 2px 8px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 4px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #52525b;
+        font-size: 0.875rem;
+        padding: 8px 0;
+        transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: #f5a623;
+    }
+
+    .back-link:hover :global(svg) {
+        transform: translateX(-2px);
+    }
+
+    .back-link :global(svg) {
+        transition: transform 0.2s ease;
+    }
+
     .prose {
         color: #a1a1aa;
+        line-height: 1.8;
     }
     .prose :global(h1), .prose :global(h2), .prose :global(h3), .prose :global(h4) {
         color: #fff;
+        font-weight: 500;
+        letter-spacing: -0.02em;
     }
     .prose :global(p) {
-        margin-bottom: 1.25em;
-        line-height: 1.75;
+        margin-bottom: 1.5em;
     }
     .prose :global(ul), .prose :global(ol) {
-        margin-bottom: 1.25em;
+        margin-bottom: 1.5em;
         padding-left: 1.5em;
     }
     .prose :global(ul) {
@@ -120,34 +151,48 @@ const seo = {
     }
     .prose :global(li) {
         margin-bottom: 0.5em;
-        line-height: 1.75;
+        line-height: 1.7;
     }
     .prose :global(li::marker) {
-        color: #71717a;
+        color: #52525b;
     }
     .prose :global(a) {
-        color: #fff;
-        text-decoration: underline;
+        color: #f5a623;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s ease;
+    }
+    .prose :global(a:hover) {
+        border-color: #f5a623;
     }
     .prose :global(code) {
-        background-color: #27272a;
-        padding: 0.2em 0.4em;
-        border-radius: 0.25rem;
-        font-size: 0.875em;
+        background-color: #18181b;
+        padding: 0.2em 0.5em;
+        border-radius: 4px;
+        font-size: 0.85em;
     }
     .prose :global(pre) {
-        background-color: #27272a;
-        padding: 1rem;
-        border-radius: 0.5rem;
+        background-color: #0a0a0a;
+        padding: 1.25rem;
+        border-radius: 8px;
         overflow-x: auto;
-        margin-bottom: 1.25em;
+        margin-bottom: 1.5em;
+        border: 1px solid #18181b;
     }
     .prose :global(pre code) {
         background-color: transparent;
         padding: 0;
+        border: none;
     }
     .prose :global(h2), .prose :global(h3) {
-        margin-top: 1.5em;
+        margin-top: 2em;
         margin-bottom: 0.75em;
+    }
+    .prose :global(blockquote) {
+        border-left: 2px solid #f5a623;
+        padding-left: 1em;
+        margin-left: 0;
+        color: #71717a;
+        font-style: normal;
     }
 </style>

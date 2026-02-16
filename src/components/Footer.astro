@@ -9,6 +9,18 @@ const { lang = 'es' } = Astro.props;
 const t = getTranslations(lang);
 ---
 
-<footer class="py-6 px-4 text-center text-sm text-zinc-500">
-    {t.footer.text} <a class="text-white hover:text-zinc-300 transition-colors" href="https://github.com/cferreras/carlosferreras.com" target="_blank" rel="noopener noreferrer">GitHub</a>.
+<footer class="py-8 px-4 text-center text-xs text-zinc-600">
+    <span>{t.footer.text}</span>
+    <a class="footer-link" href="https://github.com/cferreras/carlosferreras.com" target="_blank" rel="noopener noreferrer">GitHub</a>
 </footer>
+
+<style>
+    .footer-link {
+        color: #71717a;
+        transition: color 0.2s ease;
+        margin-left: 4px;
+    }
+    .footer-link:hover {
+        color: #f5a623;
+    }
+</style>

@@ -15,11 +15,39 @@ const seo = {
 
 <Layout maxWidth="xl" lang="es" seo={seo}>
     <div class="w-full max-w-xl" transition:name="content">
-        <h1 class="text-left text-2xl font-bold mb-2 animate-in delay-0">{t.blog.title}</h1>
-        <p class="animate-in delay-1">{t.blog.subtitle}</p>
+        <h1 class="text-left text-2xl font-medium mb-1 animate-in delay-0">{t.blog.title}</h1>
+        <p class="text-zinc-500 text-sm animate-in delay-1">{t.blog.subtitle}</p>
         <div class="animate-in delay-2">
             <PostList lang="es" />
         </div>
     </div>
-    <a class="text-zinc-500 flex flex-row items-center gap-1 hover:text-white animate-in delay-3" href="/"><Icon name="lucide:arrow-left" />{t.blog.back}</a>
+    <a class="back-link animate-in delay-3" href="/">
+        <Icon name="lucide:arrow-left" class="w-4 h-4" />
+        <span>{t.blog.back}</span>
+    </a>
 </Layout>
+
+<style>
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #52525b;
+        font-size: 0.875rem;
+        margin-top: 2rem;
+        padding: 8px 0;
+        transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: #f5a623;
+    }
+
+    .back-link:hover :global(svg) {
+        transform: translateX(-2px);
+    }
+
+    .back-link :global(svg) {
+        transition: transform 0.2s ease;
+    }
+</style>
