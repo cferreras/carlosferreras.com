@@ -9,38 +9,25 @@ interface Props {
 
 const { currentLang, alternativeUrls } = Astro.props;
 
-// Obtener la ruta actual sin el prefijo de idioma
 const currentPath = Astro.url.pathname;
 const pathWithoutLang = currentPath.replace(/^\/en/, '') || '/';
 
-// Determinar las URLs para cada idioma
 let esUrl: string;
 let enUrl: string;
 
 if (alternativeUrls) {
-  // Si se proporcionan URLs alternativas específicas (ej: desde un post), usarlas
   esUrl = alternativeUrls.es ?? '/';
   enUrl = alternativeUrls.en ?? '/en/';
 } else {
-  // Lógica por defecto: intercambiar prefijos
-  // Si estamos en /en/blog/my-post.md y pulsamos ES -> /blog/my-post.md
-  // Pero si el post no existe en español, esto dará 404
-  // Por eso detectamos si estamos en un post individual
-  
   const isBlogPost = pathWithoutLang.match(/^\/blog\/.+/);
   
   if (isBlogPost && currentLang === 'en') {
-    // Estamos en un post en inglés y queremos ir al español
-    // Como no sabemos si existe equivalente, vamos al listado de posts
     esUrl = '/blog/';
-    enUrl = currentPath; // Ya estamos aquí
+    enUrl = currentPath;
   } else if (isBlogPost && currentLang === 'es') {
-    // Estamos en un post en español y queremos ir al inglés
-    // Vamos al listado de posts en inglés
     esUrl = currentPath;
     enUrl = '/en/blog/';
   } else {
-    // No es un post, usar la ruta normal
     esUrl = pathWithoutLang;
     enUrl = `/en${pathWithoutLang === '/' ? '' : pathWithoutLang}`;
   }
@@ -48,7 +35,7 @@ if (alternativeUrls) {
 ---
 
 <div class="language-switcher animate-in delay-1">
-  <div class="flex items-center gap-1 text-sm">
+  <div class="flex items-center gap-0.5 text-xs font-medium tracking-wide">
     <a 
       href={esUrl} 
       class={`lang-link ${currentLang === 'es' ? 'active' : ''}`}
@@ -56,7 +43,7 @@ if (alternativeUrls) {
     >
       ES
     </a>
-    <span class="text-zinc-600">/</span>
+    <span class="divider"></span>
     <a 
       href={enUrl} 
       class={`lang-link ${currentLang === 'en' ? 'active' : ''}`}
@@ -71,26 +58,39 @@ if (alternativeUrls) {
   .language-switcher {
     display: inline-flex;
     align-items: center;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid #18181b;
+    border-radius: 6px;
+    backdrop-filter: blur(8px);
+  }
+
+  .divider {
+    width: 1px;
+    height: 12px;
+    background: #27272a;
+    margin: 0 8px;
   }
 
   .lang-link {
     color: #52525b;
     text-decoration: none;
-    padding: 0.125rem 0.25rem;
-    transition: color 0.2s ease;
-    font-size: 0.875rem;
+    padding: 2px 6px;
+    transition: all 0.2s ease;
+    border-radius: 4px;
   }
 
   .lang-link:hover {
     color: #a1a1aa;
+    background: rgba(255, 255, 255, 0.05);
   }
 
   .lang-link.active {
-    color: #fff;
-    font-weight: 500;
+    color: #f5a623;
+    background: rgba(245, 166, 35, 0.1);
   }
 
   .lang-link.active:hover {
-    color: #fff;
+    color: #f5a623;
   }
 </style>

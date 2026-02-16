@@ -21,7 +21,7 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
 function formatDate(date: Date): string {
   return new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', {
     day: 'numeric',
-    month: 'long',
+    month: 'short',
     year: 'numeric',
   }).format(date);
 }
@@ -29,27 +29,71 @@ function formatDate(date: Date): string {
 const basePath = lang === 'es' ? '/blog' : '/en/blog';
 ---
 
-<section class="w-full my-8">
-    <div class="flex flex-col gap-4">
+<section class="w-full mt-8">
+    <div class="flex flex-col gap-0">
         {sortedPosts.length === 0 ? (
-            <p class="text-zinc-500">{lang === 'es' ? 'No hay posts disponibles todavía.' : 'No posts available yet.'}</p>
+            <p class="text-zinc-600 py-4">{lang === 'es' ? 'No hay posts disponibles todavía.' : 'No posts available yet.'}</p>
         ) : (
             sortedPosts.map((post) => (
                 <a 
                     href={`${basePath}/${post.id.replace(/\.md$/, '')}`} 
-                    class="flex flex-row justify-between border-dashed border-b border-zinc-700 pb-2 hover:font-bold group"
+                    class="post-link group"
                 >
-                    <div class="col-span-3 flex items-center gap-2">
+                    <div class="flex items-center gap-3">
                         {post.data.draft && (
-                            <span class="text-xs bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded">Draft</span>
+                            <span class="draft-badge">Draft</span>
                         )}
-                        {post.data.title}
+                        <span class="post-title">{post.data.title}</span>
                     </div>
-                    <div class="text-zinc-500 group-hover:text-white transition-colors">
+                    <span class="post-date">
                         {formatDate(post.data.pubDate)}
-                    </div>
+                    </span>
                 </a>
             ))
         )}
     </div>
 </section>
+
+<style>
+    .post-link {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 14px 0;
+        border-bottom: 1px solid #18181b;
+        color: #e4e4e7;
+        transition: all 0.3s var(--timing-smooth, cubic-bezier(0.22, 1, 0.36, 1));
+    }
+
+    .post-link:hover {
+        color: #f5a623;
+        border-color: #27272a;
+        padding-left: 8px;
+    }
+
+    .post-title {
+        font-size: 0.9375rem;
+        letter-spacing: -0.01em;
+    }
+
+    .post-date {
+        font-size: 0.75rem;
+        color: #52525b;
+        transition: color 0.2s ease;
+    }
+
+    .post-link:hover .post-date {
+        color: #71717a;
+    }
+
+    .draft-badge {
+        font-size: 0.625rem;
+        background: rgba(245, 166, 35, 0.15);
+        color: #f5a623;
+        padding: 2px 6px;
+        border-radius: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+</style>
